@@ -435,7 +435,7 @@ curl -X DELETE http://localhost:8000/api/v1/auth/users/<uuid> \
 **Роль:** Администратор
 1. Зайди на `/admin/fairness`
 2. Система показывает Demographic Parity = 0.15 (выше порога 0.1)
-3. Детализация:的女性 (female) операторы имеют средний score 72, мужчины — 78
+3. Детализация: (female) операторы имеют средний score 72, мужчины — 78
 4. Проверь сценарии: нет ли в агрессивных сценариях гендерного перекоса
 5. Отредактируй сценарии: убери гендерно-окрашенные триггеры
 6. Запусти повторный fairness-отчёт — parity = 0.08 (OK)
@@ -581,10 +581,10 @@ curl http://localhost:8000/api/v1/metrics
 
 ## 9. Ссылки
 
-- [API.md](API.md) — полная спецификация API
-- [GLOSSARY.md](GLOSSARY.md) — глоссарий терминов
-- [DATA_FLOWS.md](DATA_FLOWS.md) — диаграммы последовательностей
-- [TROUBLESHOOTING_GUIDE.md](TROUBLESHOOTING_GUIDE.md) — руководство по устранению неполадок
+- [API.md](../API.md) — полная спецификация API
+- [GLOSSARY.md](../GLOSSARY.md) — глоссарий терминов
+- [DATA_FLOWS.md](../DATA_FLOWS.md) — диаграммы последовательностей
+- [TROUBLESHOOTING_GUIDE.md](../TROUBLESHOOTING_GUIDE.md) — руководство по устранению неполадок
 - [src/api/auth.py](../src/api/auth.py) — эндпоинты аутентификации
 - [src/api/sessions.py](../src/api/sessions.py) — эндпоинты сессий
 - [src/api/coach.py](../src/api/coach.py) — эндпоинты оценки
