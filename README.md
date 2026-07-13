@@ -10,6 +10,10 @@
 [![Status MVP](https://img.shields.io/badge/Status-Production--ready_MVP-orange.svg)](.)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)](docker-compose.prod.yml)
 [![React 18](https://img.shields.io/badge/React-18-61DAFB.svg)](https://react.dev/)
+[![TypeScript 5](https://img.shields.io/badge/TypeScript-5-3178C6.svg)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF.svg)](https://vite.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4.svg)](https://tailwindcss.com/)
+[![Zustand](https://img.shields.io/badge/Zustand-5-433E38.svg)](https://github.com/pmndrs/zustand)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1.svg)](https://www.postgresql.org/)
 [![Qdrant](https://img.shields.io/badge/Qdrant-1.13-000000.svg)](https://qdrant.tech/)
 
