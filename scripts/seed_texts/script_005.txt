@@ -1,0 +1,1 @@
+﻿Senior agent script for escalated complaints. Customer has been transferred after 3 failed interactions and is demanding a manager. Agent takes ownership of the issue without blaming previous agents, summarizes the history to show understanding, presents one clear solution with timeline, gets buy-in with follow-up commitment, and offers a goodwill gesture before ending the call.

@@ -1,0 +1,4 @@
+﻿# seed data appended by build agent
+tech-support-outage|Tech Support - Internet Outage|Level 1 tech support script for internet outage.
+billing-dispute|Billing - Disputed Charge|Billing specialist script for disputed charges.
+retention-cancel|Retention - Cancel Subscription|Retention specialist script for cancellation threats.

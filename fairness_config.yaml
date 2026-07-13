@@ -1,0 +1,21 @@
+protected_attributes:
+  - name: gender
+    values: ["male", "female", "non_binary"]
+    description: "Gender identity of the user"
+
+  - name: age_group
+    values: ["18-25", "26-35", "36-45", "46-55", "55+"]
+    description: "Age bracket of the user"
+
+  - name: accent
+    values: ["american", "british", "australian", "indian", "other"]
+    description: "Spoken accent of the user"
+
+  - name: native_language
+    values: ["english", "spanish", "mandarin", "arabic", "other"]
+    description: "Primary language of the user"
+
+alerting:
+  enabled: true
+  threshold_breach_action: "log"
+  notification_recipients: []

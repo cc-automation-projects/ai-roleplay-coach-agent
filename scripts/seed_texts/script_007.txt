@@ -1,0 +1,1 @@
+﻿New customer onboarding script. Customer calls to set up their new account. Agent walks through the registration process step by step, confirms contact information and preferences, explains key features relevant to the customer plan, and sets up billing method. Concludes with a warm welcome and confirmation that the account is active.

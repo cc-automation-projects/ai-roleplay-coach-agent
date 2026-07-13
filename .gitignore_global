@@ -1,0 +1,55 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Build
+*.pyc
+.coverage
+htmlcov/
+.coverage.*
+coverage.xml
+*.cover
+.pytest_cache/
+
+# Node
+node_modules/
+.cache/
+
+# Temp
+tmp/
+temp/
+*.bak
+*.orig
+
+# Docker
+.docker/
+
+# Extra
+storage/
+qdrant_storage/
+data/

@@ -1,0 +1,1 @@
+﻿Sales consultant script for upsell opportunities. Customer calls to pay their bill and agent identifies an upgrade opportunity. Agent handles original request efficiently, asks a discovery question about usage patterns, presents the upgrade as a solution to unstated needs, handles objections with value proposition, and closes by offering a trial or discount for the first month.

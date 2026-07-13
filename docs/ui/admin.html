@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Админ-панель | AI Coach Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Глобальные переменные и стили из globals.css */
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+            --radius: 0.5rem;
+        }
+        * {
+            border-color: hsl(var(--border));
+        }
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-feature-settings: "rlig" 1, "calt" 1;
+        }
+        .bg-background { background-color: hsl(var(--background)); }
+        .bg-card { background-color: hsl(var(--card)); }
+        .bg-primary { background-color: hsl(var(--primary)); }
+        .bg-muted { background-color: hsl(var(--muted)); }
+        .bg-secondary { background-color: hsl(var(--secondary)); }
+        .bg-green-50 { background-color: #f0fdf4; }
+        .bg-red-50 { background-color: #fef2f2; }
+        .bg-yellow-50 { background-color: #fefce8; }
+        .bg-green-100 { background-color: #dcfce7; }
+        .bg-green-500 { background-color: #22c55e; }
+        .bg-red-500 { background-color: #ef4444; }
+        .bg-yellow-500 { background-color: #eab308; }
+        .bg-blue-500 { background-color: #3b82f6; }
+        .bg-blue-50 { background-color: #eff6ff; }
+        .text-foreground { color: hsl(var(--foreground)); }
+        .text-muted-foreground { color: hsl(var(--muted-foreground)); }
+        .text-primary-foreground { color: hsl(var(--primary-foreground)); }
+        .text-card-foreground { color: hsl(var(--card-foreground)); }
+        .text-primary { color: hsl(var(--primary)); }
+        .text-green-600 { color: #16a34a; }
+        .text-red-600 { color: #dc2626; }
+        .text-yellow-600 { color: #ca8a04; }
+        .text-green-500 { color: #22c55e; }
+        .text-red-500 { color: #ef4444; }
+        .border-border { border-color: hsl(var(--border)); }
+        .border-input { border-color: hsl(var(--input)); }
+        .border-green-200 { border-color: #bbf7d0; }
+        .border-red-200 { border-color: #fecaca; }
+        .border-yellow-200 { border-color: #fde68a; }
+        .ring-offset-background { --tw-ring-offset-color: hsl(var(--background)); }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+        .shadow { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
+        .hover\:bg-primary\/90:hover { background-color: hsl(var(--primary) / 0.9); }
+        .hover\:underline:hover { text-decoration: underline; }
+        .hover\:bg-accent:hover { background-color: hsl(var(--accent)); }
+        .hover\:text-accent-foreground:hover { color: hsl(var(--accent-foreground)); }
+        .hover\:bg-muted\/50:hover { background-color: hsl(var(--muted) / 0.5); }
+        .focus-visible\:outline-none:focus-visible { outline: 2px solid transparent; outline-offset: 2px; }
+        .focus-visible\:ring-2:focus-visible { --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
+        .focus-visible\:ring-ring:focus-visible { --tw-ring-color: hsl(var(--ring)); }
+        .focus-visible\:ring-offset-2:focus-visible { --tw-ring-offset-width: 2px; }
+        .disabled\:pointer-events-none:disabled { pointer-events: none; }
+        .disabled\:opacity-50:disabled { opacity: 0.5; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .bg-primary\/10 { background-color: hsl(var(--primary) / 0.1); }
+        .bg-muted\/50 { background-color: hsl(var(--muted) / 0.5); }
+        .border-l-4 { border-left-width: 4px; }
+        .cursor-pointer { cursor: pointer; }
+        .flex-shrink-0 { flex-shrink: 0; }
+        .transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        .w-32 { width: 8rem; }
+        .w-48 { width: 12rem; }
+        .h-8 { height: 2rem; }
+        .text-xs { font-size: 0.75rem; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .top-1\/2 { top: 50%; }
+        .left-2\.5 { left: 0.625rem; }
+        .-translate-y-1\/2 { transform: translateY(-50%); }
+        .pl-8 { padding-left: 2rem; }
+        .btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.375rem; border: none; background: transparent; color: hsl(var(--muted-foreground)); cursor: pointer; transition: all 0.2s; }
+        .btn-icon:hover { background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); }
+        .btn-icon-sm { width: 1.75rem; height: 1.75rem; }
+        .btn-icon svg { width: 1rem; height: 1rem; }
+        .btn-icon-sm svg { width: 0.875rem; height: 0.875rem; }
+        /* Прогресс-бар */
+        .progress-bar { height: 0.5rem; border-radius: 9999px; background-color: hsl(var(--secondary)); overflow: hidden; }
+        .progress-bar .fill { height: 100%; border-radius: 9999px; transition: width 0.5s ease; }
+        /* Таблица */
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { text-align: left; padding: 0.5rem 0.75rem; font-size: 0.75rem; font-weight: 500; color: hsl(var(--muted-foreground)); border-bottom: 1px solid hsl(var(--border)); }
+        .table td { padding: 0.5rem 0.75rem; font-size: 0.875rem; border-bottom: 1px solid hsl(var(--border)); }
+        .table tr:last-child td { border-bottom: none; }
+        .table tbody tr:hover { background-color: hsl(var(--muted) / 0.3); }
+        /* Стили для переключателей (Switch) */
+        .switch { position: relative; display: inline-block; width: 2.25rem; height: 1.25rem; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: hsl(var(--muted)); transition: .2s; border-radius: 9999px; }
+        .slider:before { position: absolute; content: ""; height: 0.9rem; width: 0.9rem; left: 0.175rem; bottom: 0.175rem; background-color: white; transition: .2s; border-radius: 50%; }
+        input:checked + .slider { background-color: hsl(var(--primary)); }
+        input:checked + .slider:before { transform: translateX(1rem); }
+        input:disabled + .slider { opacity: 0.5; cursor: not-allowed; }
+        /* Стили для статусов компонентов */
+        .status-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.125rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+        .status-badge.ok { background-color: #dcfce7; color: #166534; }
+        .status-badge.degraded { background-color: #fef9c3; color: #854d0e; }
+        .status-badge.down { background-color: #fee2e2; color: #991b1b; }
+        .status-badge .icon { width: 0.75rem; height: 0.75rem; }
+        /* Стили для скролла */
+        .scroll-area { overflow-y: auto; scrollbar-width: thin; scrollbar-color: hsl(var(--muted)) transparent; max-height: 400px; }
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-track { background: transparent; }
+        .scroll-area::-webkit-scrollbar-thumb { background: hsl(var(--muted)); border-radius: 9999px; }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen bg-background">
+        <!-- Шапка (Header) из RootLayout -->
+        <header class="border-b bg-card sticky top-0 z-10">
+            <div class="container mx-auto flex items-center justify-between h-16 px-4">
+                <div class="flex items-center gap-6">
+                    <a href="/" class="font-bold text-xl text-primary">AI Coach Hub</a>
+                    <nav class="hidden md:flex gap-4">
+                        <a href="/operator" class="text-sm hover:text-primary">Тренажёр</a>
+                        <a href="/trainer" class="text-sm hover:text-primary">Аналитика</a>
+                        <a href="/admin" class="text-sm hover:text-primary font-medium text-primary">Администрирование</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center justify-center rounded-full bg-primary/10 text-primary w-8 h-8 text-sm font-medium">АД</span>
+                        <span class="text-sm hidden sm:inline">Админ</span>
+                    </div>
+                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-3">Выйти</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Основное содержимое -->
+        <div class="container mx-auto p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-2xl font-bold">Админ-панель</h1>
+                <div class="text-sm text-muted-foreground">Управление системой и пользователями</div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Левая колонка – управление пользователями (2/3) -->
+                <div class="lg:col-span-2">
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div class="flex flex-row items-center justify-between p-6 pb-2">
+                            <h3 class="text-sm font-medium">Управление пользователями</h3>
+                            <div class="flex items-center gap-2">
+                                <div class="relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                    <input class="flex h-10 w-48 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-8" placeholder="Поиск..." />
+                                </div>
+                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">Обновить</button>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <div class="overflow-x-auto">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Логин</th>
+                                            <th>Email</th>
+                                            <th>Роль</th>
+                                            <th>Статус</th>
+                                            <th>XP</th>
+                                            <th class="text-right">Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="font-medium">ivanov</td>
+                                            <td>ivanov@example.com</td>
+                                            <td>
+                                                <select class="flex h-8 w-32 rounded-md border border-input bg-background px-2 py-0.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                                    <option value="operator" selected>Оператор</option>
+                                                    <option value="trainer">Тренер</option>
+                                                    <option value="admin">Админ</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80">Активен</span>
+                                                    <label class="switch">
+                                                        <input type="checkbox" checked />
+                                                        <span class="slider"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>3450</td>
+                                            <td class="text-right">
+                                                <div class="flex justify-end gap-1">
+                                                    <button class="btn-icon btn-icon-sm" title="Редактировать">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                    </button>
+                                                    <button class="btn-icon btn-icon-sm text-destructive hover:text-destructive" title="Удалить">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-medium">sidorov</td>
+                                            <td>sidorov@example.com</td>
+                                            <td>
+                                                <select class="flex h-8 w-32 rounded-md border border-input bg-background px-2 py-0.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                                    <option value="operator">Оператор</option>
+                                                    <option value="trainer" selected>Тренер</option>
+                                                    <option value="admin">Админ</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80">Активен</span>
+                                                    <label class="switch">
+                                                        <input type="checkbox" checked />
+                                                        <span class="slider"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>1200</td>
+                                            <td class="text-right">
+                                                <div class="flex justify-end gap-1">
+                                                    <button class="btn-icon btn-icon-sm" title="Редактировать">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                    </button>
+                                                    <button class="btn-icon btn-icon-sm text-destructive hover:text-destructive" title="Удалить">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-medium">admin_root</td>
+                                            <td>admin@example.com</td>
+                                            <td>
+                                                <select class="flex h-8 w-32 rounded-md border border-input bg-background px-2 py-0.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                                    <option value="operator">Оператор</option>
+                                                    <option value="trainer">Тренер</option>
+                                                    <option value="admin" selected>Админ</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80">Активен</span>
+                                                    <label class="switch">
+                                                        <input type="checkbox" checked />
+                                                        <span class="slider"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>9999</td>
+                                            <td class="text-right">
+                                                <div class="flex justify-end gap-1">
+                                                    <button class="btn-icon btn-icon-sm" title="Редактировать">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                    </button>
+                                                    <button class="btn-icon btn-icon-sm text-destructive hover:text-destructive" title="Удалить">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-medium">petrova</td>
+                                            <td>petrova@example.com</td>
+                                            <td>
+                                                <select class="flex h-8 w-32 rounded-md border border-input bg-background px-2 py-0.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                                    <option value="operator" selected>Оператор</option>
+                                                    <option value="trainer">Тренер</option>
+                                                    <option value="admin">Админ</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80">Заблокирован</span>
+                                                    <label class="switch">
+                                                        <input type="checkbox" />
+                                                        <span class="slider"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>450</td>
+                                            <td class="text-right">
+                                                <div class="flex justify-end gap-1">
+                                                    <button class="btn-icon btn-icon-sm" title="Редактировать">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                    </button>
+                                                    <button class="btn-icon btn-icon-sm text-destructive hover:text-destructive" title="Удалить">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Пагинация -->
+                            <div class="flex items-center justify-between mt-4">
+                                <div class="text-sm text-muted-foreground">Показано 4 из 4</div>
+                                <div class="flex gap-1">
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 w-8" disabled>←</button>
+                                    <span class="text-sm flex items-center px-2">1 / 1</span>
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 w-8" disabled>→</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Правая колонка – системные виджеты (1/3) -->
+                <div class="space-y-6">
+                    <!-- SystemHealth -->
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div class="flex flex-row items-center justify-between p-4 pb-2">
+                            <h3 class="text-sm font-medium flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                                Здоровье системы
+                                <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80">Работает</span>
+                            </h3>
+                            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                            </button>
+                        </div>
+                        <div class="p-4 pt-0 space-y-2">
+                            <div class="text-xs text-muted-foreground mb-2">Версия: v0.1.0 • Uptime: 127 мин</div>
+                            <div class="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+                                <div class="flex items-center gap-2">
+                                    <span class="status-badge ok">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                                        OK
+                                    </span>
+                                    <span class="text-sm font-medium">Ollama Provider</span>
+                                    <span class="text-xs text-muted-foreground">120ms</span>
+                                </div>
+                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-6 px-2 text-xs">Сбросить CB</button>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+                                <div class="flex items-center gap-2">
+                                    <span class="status-badge ok">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                                        OK
+                                    </span>
+                                    <span class="text-sm font-medium">Qdrant (RAG)</span>
+                                    <span class="text-xs text-muted-foreground">45ms</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+                                <div class="flex items-center gap-2">
+                                    <span class="status-badge degraded">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+                                        Деградирует
+                                    </span>
+                                    <span class="text-sm font-medium">LiveKit (Voice)</span>
+                                    <span class="text-xs text-muted-foreground">Echo Agent Active</span>
+                                </div>
+                            </div>
+                            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3 w-full text-xs">Сбросить все Circuit Breakers</button>
+                        </div>
+                    </div>
+
+                    <!-- LMSSyncButton -->
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div class="flex flex-col space-y-1.5 p-4">
+                            <h3 class="text-sm font-medium">Синхронизация с LMS</h3>
+                        </div>
+                        <div class="p-4 pt-0 space-y-4">
+                            <div>
+                                <label class="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="planId">ID учебного плана</label>
+                                <div class="flex gap-2 mt-1">
+                                    <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="planId" placeholder="Введите ID плана..." />
+                                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 whitespace-nowrap">Синхронизировать</button>
+                                </div>
+                            </div>
+                            <!-- Результат синхронизации (успешно) -->
+                            <div class="p-3 rounded-md text-sm bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800">
+                                <div class="flex items-start gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500 flex-shrink-0 mt-0.5"><path d="M20 6L9 17l-5-5"/></svg>
+                                    <div>
+                                        <p class="font-medium">Синхронизация успешна</p>
+                                        <p class="text-xs text-muted-foreground">Курс: COACH-12345</p>
+                                        <a href="#" class="text-xs text-primary hover:underline">Открыть в LMS →</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Информация о системе -->
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div class="flex flex-col space-y-1.5 p-4">
+                            <h3 class="text-sm font-medium">О системе</h3>
+                        </div>
+                        <div class="p-4 pt-0 text-sm text-muted-foreground space-y-1">
+                            <div>Версия фронтенда: v0.1.0</div>
+                            <div>Режим: Разработка</div>
+                            <div>API: http://localhost:8000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

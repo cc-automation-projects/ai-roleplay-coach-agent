@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fairness-аудит | AI Coach Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Глобальные переменные и стили из globals.css */
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+            --radius: 0.5rem;
+        }
+        * {
+            border-color: hsl(var(--border));
+        }
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-feature-settings: "rlig" 1, "calt" 1;
+        }
+        .bg-background { background-color: hsl(var(--background)); }
+        .bg-card { background-color: hsl(var(--card)); }
+        .bg-primary { background-color: hsl(var(--primary)); }
+        .bg-muted { background-color: hsl(var(--muted)); }
+        .bg-secondary { background-color: hsl(var(--secondary)); }
+        .bg-green-50 { background-color: #f0fdf4; }
+        .bg-red-50 { background-color: #fef2f2; }
+        .bg-yellow-50 { background-color: #fefce8; }
+        .bg-green-500 { background-color: #22c55e; }
+        .bg-red-500 { background-color: #ef4444; }
+        .bg-yellow-500 { background-color: #eab308; }
+        .text-foreground { color: hsl(var(--foreground)); }
+        .text-muted-foreground { color: hsl(var(--muted-foreground)); }
+        .text-primary-foreground { color: hsl(var(--primary-foreground)); }
+        .text-card-foreground { color: hsl(var(--card-foreground)); }
+        .text-primary { color: hsl(var(--primary)); }
+        .text-green-600 { color: #16a34a; }
+        .text-red-600 { color: #dc2626; }
+        .text-yellow-600 { color: #ca8a04; }
+        .text-green-700 { color: #15803d; }
+        .text-red-700 { color: #b91c1c; }
+        .text-yellow-700 { color: #a16207; }
+        .border-border { border-color: hsl(var(--border)); }
+        .border-input { border-color: hsl(var(--input)); }
+        .border-green-200 { border-color: #bbf7d0; }
+        .border-red-200 { border-color: #fecaca; }
+        .border-yellow-200 { border-color: #fde68a; }
+        .ring-offset-background { --tw-ring-offset-color: hsl(var(--background)); }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+        .shadow { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
+        .hover\:bg-primary\/90:hover { background-color: hsl(var(--primary) / 0.9); }
+        .hover\:underline:hover { text-decoration: underline; }
+        .hover\:bg-accent:hover { background-color: hsl(var(--accent)); }
+        .hover\:text-accent-foreground:hover { color: hsl(var(--accent-foreground)); }
+        .hover\:bg-muted\/50:hover { background-color: hsl(var(--muted) / 0.5); }
+        .focus-visible\:outline-none:focus-visible { outline: 2px solid transparent; outline-offset: 2px; }
+        .focus-visible\:ring-2:focus-visible { --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
+        .focus-visible\:ring-ring:focus-visible { --tw-ring-color: hsl(var(--ring)); }
+        .focus-visible\:ring-offset-2:focus-visible { --tw-ring-offset-width: 2px; }
+        .disabled\:pointer-events-none:disabled { pointer-events: none; }
+        .disabled\:opacity-50:disabled { opacity: 0.5; }
+        .bg-primary\/10 { background-color: hsl(var(--primary) / 0.1); }
+        .bg-muted\/50 { background-color: hsl(var(--muted) / 0.5); }
+        .cursor-pointer { cursor: pointer; }
+        .flex-shrink-0 { flex-shrink: 0; }
+        .transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+        .border-l-4 { border-left-width: 4px; }
+        /* Статусные бейджи для fairness */
+        .status-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.125rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+        .status-badge.ok { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .status-badge.warning { background-color: #fef9c3; color: #854d0e; border: 1px solid #fde68a; }
+        .status-badge.alert { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .status-badge .icon { width: 0.75rem; height: 0.75rem; }
+        /* Стили для таблицы */
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { text-align: left; padding: 0.5rem 0.75rem; font-size: 0.75rem; font-weight: 500; color: hsl(var(--muted-foreground)); border-bottom: 1px solid hsl(var(--border)); }
+        .table td { padding: 0.5rem 0.75rem; font-size: 0.875rem; border-bottom: 1px solid hsl(var(--border)); }
+        .table tr:last-child td { border-bottom: none; }
+        .table tbody tr:hover { background-color: hsl(var(--muted) / 0.3); }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .w-48 { width: 12rem; }
+        .h-8 { height: 2rem; }
+        .text-xs { font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen bg-background">
+        <!-- Шапка (Header) из RootLayout -->
+        <header class="border-b bg-card sticky top-0 z-10">
+            <div class="container mx-auto flex items-center justify-between h-16 px-4">
+                <div class="flex items-center gap-6">
+                    <a href="/" class="font-bold text-xl text-primary">AI Coach Hub</a>
+                    <nav class="hidden md:flex gap-4">
+                        <a href="/operator" class="text-sm hover:text-primary">Тренажёр</a>
+                        <a href="/trainer" class="text-sm hover:text-primary">Аналитика</a>
+                        <a href="/admin" class="text-sm hover:text-primary font-medium text-primary">Администрирование</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center justify-center rounded-full bg-primary/10 text-primary w-8 h-8 text-sm font-medium">АД</span>
+                        <span class="text-sm hidden sm:inline">Админ</span>
+                    </div>
+                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-3">Выйти</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Основное содержимое -->
+        <div class="container mx-auto p-6 max-w-6xl space-y-6">
+            <!-- Заголовок -->
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">Fairness-аудит</h1>
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-yellow-500 text-white shadow hover:bg-yellow-500/80">⚠️ Внимание</span>
+                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">Обновить</button>
+                </div>
+            </div>
+
+            <!-- Сводка (3 карточки) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="flex flex-col space-y-1.5 p-4 pb-2">
+                        <h3 class="text-sm font-medium text-muted-foreground">Всего метрик</h3>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <p class="text-2xl font-bold">6</p>
+                    </div>
+                </div>
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm border-yellow-200">
+                    <div class="flex flex-col space-y-1.5 p-4 pb-2">
+                        <h3 class="text-sm font-medium text-muted-foreground">Предупреждения</h3>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <p class="text-2xl font-bold text-yellow-600">0</p>
+                    </div>
+                </div>
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm border-red-200">
+                    <div class="flex flex-col space-y-1.5 p-4 pb-2">
+                        <h3 class="text-sm font-medium text-muted-foreground">Критические нарушения</h3>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <p class="text-2xl font-bold text-red-600">1</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Таблица детальных метрик -->
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <h3 class="text-sm font-medium">Детальные метрики</h3>
+                </div>
+                <div class="p-6 pt-0">
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Группа</th>
+                                    <th>Метрика</th>
+                                    <th class="text-right">Значение</th>
+                                    <th class="text-right">Ожидаемый диапазон</th>
+                                    <th class="text-right">Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Строка 1: Пол (женщины) - ok -->
+                                <tr>
+                                    <td>Пол (женщины)</td>
+                                    <td>Средняя оценка</td>
+                                    <td class="text-right font-mono">78.5</td>
+                                    <td class="text-right font-mono text-muted-foreground">75 – 85</td>
+                                    <td class="text-right">
+                                        <span class="status-badge ok">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M20 6L9 17l-5-5"/></svg>
+                                            ✅ В норме
+                                        </span>
+                                    </td>
+                                </tr>
+                                <!-- Строка 2: Пол (мужчины) - ok -->
+                                <tr>
+                                    <td>Пол (мужчины)</td>
+                                    <td>Средняя оценка</td>
+                                    <td class="text-right font-mono">76.2</td>
+                                    <td class="text-right font-mono text-muted-foreground">75 – 85</td>
+                                    <td class="text-right">
+                                        <span class="status-badge ok">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M20 6L9 17l-5-5"/></svg>
+                                            ✅ В норме
+                                        </span>
+                                    </td>
+                                </tr>
+                                <!-- Строка 3: Акцент (южный) - alert -->
+                                <tr class="bg-red-50/50">
+                                    <td class="font-medium">Акцент (южный)</td>
+                                    <td>Средняя оценка</td>
+                                    <td class="text-right font-mono text-red-600">68.0</td>
+                                    <td class="text-right font-mono text-muted-foreground">72 – 82</td>
+                                    <td class="text-right">
+                                        <span class="status-badge alert">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                            🚨 Требует аудита
+                                        </span>
+                                    </td>
+                                </tr>
+                                <!-- Строка 4: Акцент (северный) - ok -->
+                                <tr>
+                                    <td>Акцент (северный)</td>
+                                    <td>Средняя оценка</td>
+                                    <td class="text-right font-mono">79.0</td>
+                                    <td class="text-right font-mono text-muted-foreground">72 – 82</td>
+                                    <td class="text-right">
+                                        <span class="status-badge ok">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M20 6L9 17l-5-5"/></svg>
+                                            ✅ В норме
+                                        </span>
+                                    </td>
+                                </tr>
+                                <!-- Строка 5: Тембр (низкий) - ok -->
+                                <tr>
+                                    <td>Тембр (низкий)</td>
+                                    <td>Средняя оценка</td>
+                                    <td class="text-right font-mono">74.0</td>
+                                    <td class="text-right font-mono text-muted-foreground">70 – 80</td>
+                                    <td class="text-right">
+                                        <span class="status-badge ok">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M20 6L9 17l-5-5"/></svg>
+                                            ✅ В норме
+                                        </span>
+                                    </td>
+                                </tr>
+                                <!-- Строка 6: Тембр (высокий) - ok -->
+                                <tr>
+                                    <td>Тембр (высокий)</td>
+                                    <td>Средняя оценка</td>
+                                    <td class="text-right font-mono">72.0</td>
+                                    <td class="text-right font-mono text-muted-foreground">70 – 80</td>
+                                    <td class="text-right">
+                                        <span class="status-badge ok">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M20 6L9 17l-5-5"/></svg>
+                                            ✅ В норме
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Примечание -->
+                    <div class="mt-4 text-xs text-muted-foreground border-t pt-3">
+                        * Аудит основан на анализе оценок и демографических данных операторов. Отклонения могут указывать на систематическую ошибку.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Дополнительная информация / рекомендации -->
+            <div class="rounded-lg border border-yellow-200 bg-yellow-50/50 p-4">
+                <div class="flex items-start gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-600 flex-shrink-0 mt-0.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                    <div>
+                        <p class="font-medium text-yellow-700">Рекомендация по аудиту</p>
+                        <p class="text-sm text-yellow-700/80 mt-1">
+                            Обнаружено систематическое отклонение в группе "Акцент (южный)". 
+                            Рекомендуется провести дополнительный анализ записей сессий 
+                            и проверить, не связана ли низкая оценка с особенностями распознавания речи (ASR).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

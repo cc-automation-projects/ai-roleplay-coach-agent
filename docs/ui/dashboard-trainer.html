@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Дашборд тренера | AI Coach Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Глобальные переменные и стили из globals.css */
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+            --radius: 0.5rem;
+        }
+        * {
+            border-color: hsl(var(--border));
+        }
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-feature-settings: "rlig" 1, "calt" 1;
+        }
+        .bg-background { background-color: hsl(var(--background)); }
+        .bg-card { background-color: hsl(var(--card)); }
+        .bg-primary { background-color: hsl(var(--primary)); }
+        .bg-muted { background-color: hsl(var(--muted)); }
+        .bg-secondary { background-color: hsl(var(--secondary)); }
+        .bg-green-100 { background-color: #dcfce7; }
+        .text-green-700 { color: #15803d; }
+        .bg-yellow-100 { background-color: #fef9c3; }
+        .text-yellow-700 { color: #a16207; }
+        .bg-red-100 { background-color: #fee2e2; }
+        .text-red-700 { color: #b91c1c; }
+        .bg-green-500 { background-color: #22c55e; }
+        .bg-yellow-500 { background-color: #eab308; }
+        .bg-red-500 { background-color: #ef4444; }
+        .bg-blue-500 { background-color: #3b82f6; }
+        .bg-indigo-500 { background-color: #6366f1; }
+        .text-foreground { color: hsl(var(--foreground)); }
+        .text-muted-foreground { color: hsl(var(--muted-foreground)); }
+        .text-primary-foreground { color: hsl(var(--primary-foreground)); }
+        .text-card-foreground { color: hsl(var(--card-foreground)); }
+        .text-primary { color: hsl(var(--primary)); }
+        .text-green-600 { color: #16a34a; }
+        .text-red-600 { color: #dc2626; }
+        .border-border { border-color: hsl(var(--border)); }
+        .border-input { border-color: hsl(var(--input)); }
+        .ring-offset-background { --tw-ring-offset-color: hsl(var(--background)); }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+        .shadow { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
+        .hover\:bg-primary\/90:hover { background-color: hsl(var(--primary) / 0.9); }
+        .hover\:underline:hover { text-decoration: underline; }
+        .hover\:bg-accent:hover { background-color: hsl(var(--accent)); }
+        .hover\:text-accent-foreground:hover { color: hsl(var(--accent-foreground)); }
+        .focus-visible\:outline-none:focus-visible { outline: 2px solid transparent; outline-offset: 2px; }
+        .focus-visible\:ring-2:focus-visible { --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
+        .focus-visible\:ring-ring:focus-visible { --tw-ring-color: hsl(var(--ring)); }
+        .focus-visible\:ring-offset-2:focus-visible { --tw-ring-offset-width: 2px; }
+        .disabled\:pointer-events-none:disabled { pointer-events: none; }
+        .disabled\:opacity-50:disabled { opacity: 0.5; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .bg-primary\/10 { background-color: hsl(var(--primary) / 0.1); }
+        .bg-muted\/50 { background-color: hsl(var(--muted) / 0.5); }
+        .border-l-4 { border-left-width: 4px; }
+        .avatar { display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; width: 2rem; height: 2rem; font-weight: 600; font-size: 0.75rem; color: white; flex-shrink: 0; }
+        .avatar-sm { width: 2rem; height: 2rem; font-size: 0.75rem; }
+        /* Прогресс-бар */
+        .progress-bar { height: 0.5rem; border-radius: 9999px; background-color: hsl(var(--secondary)); overflow: hidden; }
+        .progress-bar .fill { height: 100%; border-radius: 9999px; transition: width 0.5s ease; }
+        /* Табы */
+        .tabs { display: flex; border-bottom: 1px solid hsl(var(--border)); }
+        .tab-trigger { padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: hsl(var(--muted-foreground)); border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
+        .tab-trigger:hover { color: hsl(var(--foreground)); }
+        .tab-trigger.active { color: hsl(var(--foreground)); border-bottom-color: hsl(var(--primary)); }
+        .tab-trigger:disabled { opacity: 0.5; cursor: not-allowed; }
+        .tab-content { display: none; padding-top: 1rem; }
+        .tab-content.active { display: block; }
+        /* Стили для таблицы */
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { text-align: left; padding: 0.5rem 0.75rem; font-size: 0.75rem; font-weight: 500; color: hsl(var(--muted-foreground)); border-bottom: 1px solid hsl(var(--border)); }
+        .table td { padding: 0.5rem 0.75rem; font-size: 0.875rem; border-bottom: 1px solid hsl(var(--border)); }
+        .table tr:last-child td { border-bottom: none; }
+        .table tbody tr:hover { background-color: hsl(var(--muted) / 0.3); }
+        /* Стили для графиков (имитация) */
+        .chart-container { width: 100%; height: 200px; }
+        .bar-chart { display: flex; align-items: flex-end; justify-content: space-around; height: 160px; padding-top: 10px; }
+        .bar { width: 30px; border-radius: 4px 4px 0 0; transition: height 0.5s ease; min-height: 4px; }
+        .bar-label { text-align: center; font-size: 10px; color: hsl(var(--muted-foreground)); margin-top: 4px; }
+        .bar-tooltip { position: relative; cursor: pointer; }
+        .line-chart { position: relative; height: 160px; padding: 10px 0; }
+        .line-chart svg { width: 100%; height: 100%; }
+        .line-chart .line { stroke: #6366f1; stroke-width: 2; fill: none; }
+        .line-chart .dot { fill: #6366f1; r: 3; }
+        .line-chart .dot-hover { fill: #6366f1; r: 5; }
+        .line-chart .grid-line { stroke: hsl(var(--border)); stroke-width: 0.5; stroke-dasharray: 3 3; }
+        .line-chart .axis-label { font-size: 9px; fill: hsl(var(--muted-foreground)); }
+        /* Стили для кнопок действий в таблице */
+        .btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.375rem; border: none; background: transparent; color: hsl(var(--muted-foreground)); cursor: pointer; transition: all 0.2s; }
+        .btn-icon:hover { background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); }
+        .btn-icon-sm { width: 1.75rem; height: 1.75rem; }
+        .btn-icon svg { width: 1rem; height: 1rem; }
+        .btn-icon-sm svg { width: 0.875rem; height: 0.875rem; }
+        /* Стили для скролла */
+        .scroll-area { overflow-y: auto; scrollbar-width: thin; scrollbar-color: hsl(var(--muted)) transparent; max-height: 400px; }
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-track { background: transparent; }
+        .scroll-area::-webkit-scrollbar-thumb { background: hsl(var(--muted)); border-radius: 9999px; }
+        /* Стили для поиска */
+        .search-input { padding-left: 2rem; }
+        .search-icon { position: absolute; left: 0.5rem; top: 50%; transform: translateY(-50%); color: hsl(var(--muted-foreground)); }
+        .relative { position: relative; }
+        .w-32 { width: 8rem; }
+        .w-48 { width: 12rem; }
+        .h-8 { height: 2rem; }
+        .text-xs { font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen bg-background">
+        <!-- Шапка (Header) из RootLayout -->
+        <header class="border-b bg-card sticky top-0 z-10">
+            <div class="container mx-auto flex items-center justify-between h-16 px-4">
+                <div class="flex items-center gap-6">
+                    <a href="/" class="font-bold text-xl text-primary">AI Coach Hub</a>
+                    <nav class="hidden md:flex gap-4">
+                        <a href="/operator" class="text-sm hover:text-primary">Тренажёр</a>
+                        <a href="/trainer" class="text-sm hover:text-primary font-medium text-primary">Аналитика</a>
+                        <a href="/admin" class="text-sm hover:text-primary">Администрирование</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="avatar avatar-sm bg-primary/10 text-primary">ТР</span>
+                        <span class="text-sm hidden sm:inline">Тренер</span>
+                    </div>
+                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-3">Выйти</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Основное содержимое -->
+        <div class="container mx-auto p-4 md:p-6 space-y-6">
+            <!-- Заголовок -->
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold">Дашборд тренера</h1>
+                    <p class="text-sm text-muted-foreground">Аналитика по обучению операторов</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                        Экспорт
+                    </button>
+                </div>
+            </div>
+
+            <!-- Глобальные метрики (GlobalMetrics) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Карточка 1: Операторы -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-muted-foreground">Операторы</p>
+                                <p class="text-2xl font-bold">142</p>
+                                <p class="text-xs text-muted-foreground">+5 за неделю</p>
+                            </div>
+                            <div class="p-2 rounded-full bg-primary/10 text-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex items-center text-xs">
+                            <span class="font-medium text-green-600">↑ 3.6%</span>
+                            <span class="text-muted-foreground ml-1">за период</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка 2: Сессий -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-muted-foreground">Сессий</p>
+                                <p class="text-2xl font-bold">847</p>
+                                <p class="text-xs text-muted-foreground">за последние 30 дней</p>
+                            </div>
+                            <div class="p-2 rounded-full bg-primary/10 text-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex items-center text-xs">
+                            <span class="font-medium text-green-600">↑ 12.4%</span>
+                            <span class="text-muted-foreground ml-1">за период</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка 3: Средний балл -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-muted-foreground">Средний балл</p>
+                                <p class="text-2xl font-bold">76.4%</p>
+                                <p class="text-xs text-muted-foreground">+2.1% за неделю</p>
+                            </div>
+                            <div class="p-2 rounded-full bg-primary/10 text-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex items-center text-xs">
+                            <span class="font-medium text-green-600">↑ 2.8%</span>
+                            <span class="text-muted-foreground ml-1">за период</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Карточка 4: Лучший сценарий -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-muted-foreground">Лучший сценарий</p>
+                                <p class="text-2xl font-bold">Биллинг</p>
+                                <p class="text-xs text-muted-foreground">Чаще всего проходят</p>
+                            </div>
+                            <div class="p-2 rounded-full bg-primary/10 text-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex items-center text-xs">
+                            <span class="text-muted-foreground">237 прохождений</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Основная сетка: 3 колонки -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Левая и центральная колонки (2/3) -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Табы: Распределение и Прогресс -->
+                    <div>
+                        <div class="tabs">
+                            <button class="tab-trigger active" data-tab="distribution">Распределение</button>
+                            <button class="tab-trigger" data-tab="progress" disabled>Прогресс</button>
+                        </div>
+                        <div id="distribution" class="tab-content active">
+                            <!-- ScoreDistributionChart -->
+                            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                                <div class="flex flex-col space-y-1.5 p-6">
+                                    <h3 class="text-sm font-medium">Распределение оценок (overall score)</h3>
+                                </div>
+                                <div class="p-6 pt-0">
+                                    <div class="chart-container">
+                                        <!-- Имитация BarChart -->
+                                        <div class="bar-chart">
+                                            <div class="bar-tooltip">
+                                                <div class="bar" style="height: 20px; background-color: #ef4444;"></div>
+                                                <div class="bar-label">0-20</div>
+                                            </div>
+                                            <div class="bar-tooltip">
+                                                <div class="bar" style="height: 45px; background-color: #f59e0b;"></div>
+                                                <div class="bar-label">21-40</div>
+                                            </div>
+                                            <div class="bar-tooltip">
+                                                <div class="bar" style="height: 70px; background-color: #eab308;"></div>
+                                                <div class="bar-label">41-60</div>
+                                            </div>
+                                            <div class="bar-tooltip">
+                                                <div class="bar" style="height: 110px; background-color: #22c55e;"></div>
+                                                <div class="bar-label">61-80</div>
+                                            </div>
+                                            <div class="bar-tooltip">
+                                                <div class="bar" style="height: 140px; background-color: #3b82f6;"></div>
+                                                <div class="bar-label">81-90</div>
+                                            </div>
+                                            <div class="bar-tooltip">
+                                                <div class="bar" style="height: 95px; background-color: #8b5cf6;"></div>
+                                                <div class="bar-label">91-100</div>
+                                            </div>
+                                        </div>
+                                        <!-- Легенда -->
+                                        <div class="flex justify-center gap-4 mt-2 text-xs text-muted-foreground">
+                                            <span>Количество операторов</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="progress" class="tab-content">
+                            <!-- UserProgressChart -->
+                            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                                <div class="flex flex-col space-y-1.5 p-6">
+                                    <h3 class="text-sm font-medium">Прогресс : Оператор</h3>
+                                </div>
+                                <div class="p-6 pt-0">
+                                    <div class="chart-container">
+                                        <!-- Имитация LineChart -->
+                                        <div class="line-chart">
+                                            <svg viewBox="0 0 600 160" preserveAspectRatio="none">
+                                                <!-- Сетка -->
+                                                <line x1="0" y1="140" x2="600" y2="140" stroke="#e5e7eb" stroke-width="0.5" stroke-dasharray="3 3"/>
+                                                <line x1="0" y1="105" x2="600" y2="105" stroke="#e5e7eb" stroke-width="0.5" stroke-dasharray="3 3"/>
+                                                <line x1="0" y1="70" x2="600" y2="70" stroke="#e5e7eb" stroke-width="0.5" stroke-dasharray="3 3"/>
+                                                <line x1="0" y1="35" x2="600" y2="35" stroke="#e5e7eb" stroke-width="0.5" stroke-dasharray="3 3"/>
+
+                                                <!-- Линия -->
+                                                <polyline points="20,120 120,100 220,80 320,40 420,60 520,30 580,50" fill="none" stroke="#6366f1" stroke-width="2.5"/>
+                                                <!-- Точки -->
+                                                <circle cx="20" cy="120" r="4" fill="#6366f1"/>
+                                                <circle cx="120" cy="100" r="4" fill="#6366f1"/>
+                                                <circle cx="220" cy="80" r="4" fill="#6366f1"/>
+                                                <circle cx="320" cy="40" r="4" fill="#6366f1"/>
+                                                <circle cx="420" cy="60" r="4" fill="#6366f1"/>
+                                                <circle cx="520" cy="30" r="4" fill="#6366f1"/>
+                                                <circle cx="580" cy="50" r="4" fill="#6366f1"/>
+
+                                                <!-- Подписи осей X -->
+                                                <text x="20" y="155" font-size="8" fill="#6b7280" text-anchor="middle">01.07</text>
+                                                <text x="120" y="155" font-size="8" fill="#6b7280" text-anchor="middle">03.07</text>
+                                                <text x="220" y="155" font-size="8" fill="#6b7280" text-anchor="middle">05.07</text>
+                                                <text x="320" y="155" font-size="8" fill="#6b7280" text-anchor="middle">07.07</text>
+                                                <text x="420" y="155" font-size="8" fill="#6b7280" text-anchor="middle">09.07</text>
+                                                <text x="520" y="155" font-size="8" fill="#6b7280" text-anchor="middle">11.07</text>
+                                                <text x="580" y="155" font-size="8" fill="#6b7280" text-anchor="middle">13.07</text>
+
+                                                <!-- Подписи оси Y -->
+                                                <text x="2" y="142" font-size="8" fill="#6b7280" text-anchor="end">0</text>
+                                                <text x="2" y="107" font-size="8" fill="#6b7280" text-anchor="end">50</text>
+                                                <text x="2" y="72" font-size="8" fill="#6b7280" text-anchor="end">100</text>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Статистика выбранного пользователя (скрыта, пока не выбран оператор) -->
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm" style="display: none;">
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-medium">Статистика оператора</h3>
+                                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><polyline points="15 18 9 12 15 6"/></svg>
+                                    Сбросить
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div>
+                                    <p class="text-sm text-muted-foreground">Сессий</p>
+                                    <p class="text-lg font-bold">12</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-muted-foreground">Средний балл</p>
+                                    <p class="text-lg font-bold">78%</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-muted-foreground">Максимум</p>
+                                    <p class="text-lg font-bold">92%</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-muted-foreground">Минимум</p>
+                                    <p class="text-lg font-bold">55%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Правая колонка (1/3) -->
+                <div class="lg:col-span-1">
+                    <!-- OperatorList -->
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm h-full">
+                        <div class="flex flex-col space-y-1.5 p-6 pb-2">
+                            <h3 class="text-sm font-medium">Операторы</h3>
+                            <div class="relative">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <input class="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 search-input" placeholder="Поиск..." />
+                            </div>
+                        </div>
+                        <div class="p-0">
+                            <div class="scroll-area">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Имя</th>
+                                            <th class="text-right">Сессий</th>
+                                            <th class="text-right">Ср. балл</th>
+                                            <th class="text-right">Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="font-medium">Иванов И.</td>
+                                            <td class="text-right">45</td>
+                                            <td class="text-right text-green-600">82%</td>
+                                            <td class="text-right">
+                                                <button class="btn-icon btn-icon-sm" title="Просмотр">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-medium">Петров П.</td>
+                                            <td class="text-right">38</td>
+                                            <td class="text-right text-yellow-700">65%</td>
+                                            <td class="text-right">
+                                                <button class="btn-icon btn-icon-sm" title="Просмотр">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-medium">Сидоров С.</td>
+                                            <td class="text-right">52</td>
+                                            <td class="text-right text-green-600">91%</td>
+                                            <td class="text-right">
+                                                <button class="btn-icon btn-icon-sm" title="Просмотр">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-medium">Кузнецова К.</td>
+                                            <td class="text-right">29</td>
+                                            <td class="text-right text-red-700">48%</td>
+                                            <td class="text-right">
+                                                <button class="btn-icon btn-icon-sm" title="Просмотр">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-medium">Смирнова А.</td>
+                                            <td class="text-right">41</td>
+                                            <td class="text-right text-green-600">87%</td>
+                                            <td class="text-right">
+                                                <button class="btn-icon btn-icon-sm" title="Просмотр">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-medium">Михайлов М.</td>
+                                            <td class="text-right">33</td>
+                                            <td class="text-right text-yellow-700">71%</td>
+                                            <td class="text-right">
+                                                <button class="btn-icon btn-icon-sm" title="Просмотр">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-medium">Фёдорова Ф.</td>
+                                            <td class="text-right">47</td>
+                                            <td class="text-right text-green-600">84%</td>
+                                            <td class="text-right">
+                                                <button class="btn-icon btn-icon-sm" title="Просмотр">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-medium">Николаев Н.</td>
+                                            <td class="text-right">25</td>
+                                            <td class="text-right text-yellow-700">62%</td>
+                                            <td class="text-right">
+                                                <button class="btn-icon btn-icon-sm" title="Просмотр">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="p-4 border-t">
+                                <div class="flex items-center justify-between text-sm text-muted-foreground">
+                                    <span>Показано 8 из 42</span>
+                                    <div class="flex gap-1">
+                                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 w-8" disabled>←</button>
+                                        <span class="text-sm flex items-center px-2">1 / 6</span>
+                                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 w-8">→</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Простая логика для табов
+        document.querySelectorAll('.tab-trigger').forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                // Удаляем active у всех триггеров
+                document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                // Скрываем все контенты
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                // Показываем нужный
+                const tabId = this.dataset.tab;
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

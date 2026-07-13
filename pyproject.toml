@@ -1,0 +1,125 @@
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-roleplay-coach-hub"
+version = "0.1.0"
+description = "Multi-agent AI roleplay and coaching system"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.10,<3",
+    "langgraph>=0.4",
+    "sqlalchemy>=2.0,<3",
+    "pydantic-settings>=2.7",
+    "anyio>=4.8",
+    "httpx>=0.28",
+    "asyncpg>=0.30",
+    "alembic>=1.14",
+    "redis>=5.2",
+    "qdrant-client>=1.13",
+    "minio>=7.2",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.34",
+    "python-multipart>=0.0.20",
+    "python-jose[cryptography]>=3.3",
+    "bcrypt>=4.0",
+    "structlog>=24.4",
+    "prometheus-client>=0.21",
+    "python-dotenv>=1.1",
+    "livekit>=0.19",
+    "livekit-agents>=1.5",
+    "spacy>=3.8",
+    "orjson>=3.10",
+
+    "pydantic[email]",
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.25",
+    "pytest-cov>=6.0",
+    "pytest-mock>=3.14",
+    "pytest-testmon>=2.1",
+    "ruff>=0.9",
+    "mypy>=1.15",
+    "pydantic[mypy]",
+    "pre-commit>=4.1",
+    "ipython>=8.32",
+    "watchfiles>=1.0",
+    "pip-audit>=2.7",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["tests*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D", "COM812", "ERA", "TD", "TC003", "FAST002", "B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/**/*.py" = ["RUF001", "RUF002", "RUF003", "ANN401", "PLR2004"]
+"tests/**/*.py" = ["S101", "S105", "PLR2004", "D", "ANN", "PLC0415", "S106", "B017", "PT011", "SLF001", "ARG001", "ARG002", "BLE001", "E501", "INP001", "N817", "PLW1510", "PLR0913", "RUF001", "RUF002", "RUF003"]
+
+[[tool.mypy.overrides]]
+module = "infrastructure.qdrant.client"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "infrastructure.qdrant.rag_service"
+ignore_errors = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+
+[tool.mypy]
+python_version = "3.12"
+strict = false
+explicit_package_bases = true
+warn_unused_configs = true
+warn_return_any = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_reexport = true
+strict_equality = true
+check_untyped_defs = true
+plugins = ["pydantic.mypy"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+pythonpath = ["src"]
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "unit: Unit tests (fast, no external deps)",
+    "integration: Integration tests (require Docker services)",
+    "slow: Slow tests (e.g. full text generation)",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*", "*/__init__.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "def __repr__",
+    "def __str__",
+]

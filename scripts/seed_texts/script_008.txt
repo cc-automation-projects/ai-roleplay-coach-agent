@@ -1,0 +1,1 @@
+﻿Technical support script for slow internet speed complaints. Customer reports slower than expected speeds. Agent runs a remote speed test, checks for local network congestion, guides the customer through router restart procedures and channel optimization. If issue persists, schedules a technician visit or escalates to the network team.

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Результаты сессии | AI Coach Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Глобальные переменные и стили из globals.css */
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+            --radius: 0.5rem;
+        }
+        * {
+            border-color: hsl(var(--border));
+        }
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-feature-settings: "rlig" 1, "calt" 1;
+        }
+        .bg-background { background-color: hsl(var(--background)); }
+        .bg-card { background-color: hsl(var(--card)); }
+        .bg-primary { background-color: hsl(var(--primary)); }
+        .bg-muted { background-color: hsl(var(--muted)); }
+        .bg-secondary { background-color: hsl(var(--secondary)); }
+        .bg-green-500 { background-color: #22c55e; }
+        .bg-yellow-500 { background-color: #eab308; }
+        .bg-blue-500 { background-color: #3b82f6; }
+        .bg-indigo-500 { background-color: #6366f1; }
+        .bg-amber-500 { background-color: #f59e0b; }
+        .bg-pink-500 { background-color: #ec4899; }
+        .bg-green-50 { background-color: #f0fdf4; }
+        .bg-yellow-50 { background-color: #fefce8; }
+        .bg-blue-50 { background-color: #eff6ff; }
+        .text-foreground { color: hsl(var(--foreground)); }
+        .text-muted-foreground { color: hsl(var(--muted-foreground)); }
+        .text-primary-foreground { color: hsl(var(--primary-foreground)); }
+        .text-card-foreground { color: hsl(var(--card-foreground)); }
+        .text-green-600 { color: #16a34a; }
+        .text-yellow-600 { color: #ca8a04; }
+        .text-blue-600 { color: #2563eb; }
+        .text-indigo-600 { color: #4f46e5; }
+        .text-amber-600 { color: #d97706; }
+        .text-pink-600 { color: #db2777; }
+        .text-primary { color: hsl(var(--primary)); }
+        .text-green-500 { color: #22c55e; }
+        .text-yellow-500 { color: #eab308; }
+        .text-blue-500 { color: #3b82f6; }
+        .border-border { border-color: hsl(var(--border)); }
+        .border-input { border-color: hsl(var(--input)); }
+        .ring-offset-background { --tw-ring-offset-color: hsl(var(--background)); }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+        .hover\:bg-primary\/90:hover { background-color: hsl(var(--primary) / 0.9); }
+        .hover\:underline:hover { text-decoration: underline; }
+        .hover\:bg-muted\/50:hover { background-color: hsl(var(--muted) / 0.5); }
+        .focus-visible\:outline-none:focus-visible { outline: 2px solid transparent; outline-offset: 2px; }
+        .focus-visible\:ring-2:focus-visible { --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
+        .focus-visible\:ring-ring:focus-visible { --tw-ring-color: hsl(var(--ring)); }
+        .focus-visible\:ring-offset-2:focus-visible { --tw-ring-offset-width: 2px; }
+        .disabled\:pointer-events-none:disabled { pointer-events: none; }
+        .disabled\:opacity-50:disabled { opacity: 0.5; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .bg-primary\/10 { background-color: hsl(var(--primary) / 0.1); }
+        .bg-muted\/50 { background-color: hsl(var(--muted) / 0.5); }
+        .border-green-200 { border-color: #bbf7d0; }
+        .border-yellow-200 { border-color: #fde68a; }
+        .border-blue-200 { border-color: #bfdbfe; }
+        .border-primary\/30 { border-color: hsl(var(--primary) / 0.3); }
+        .border-l-4 { border-left-width: 4px; }
+        .prose { max-width: 65ch; line-height: 1.6; }
+        .prose-sm { font-size: 0.875rem; }
+        .prose-sm p { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+        .prose-sm blockquote { border-left: 2px solid hsl(var(--primary) / 0.3); padding-left: 0.75rem; font-style: italic; }
+        .prose-sm .font-medium { font-weight: 500; }
+        /* Прогресс-бар */
+        .progress-bar { height: 0.5rem; border-radius: 9999px; background-color: hsl(var(--secondary)); overflow: hidden; }
+        .progress-bar .fill { height: 100%; border-radius: 9999px; transition: width 0.5s ease; }
+        /* Стили для анимации XP */
+        .xp-counter { font-size: 2rem; font-weight: 700; }
+        .xp-bonus { color: #22c55e; font-size: 0.875rem; font-weight: 500; animation: pulse 1s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        /* Стили для модалки Level Up */
+        .modal-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 50; }
+        .modal-content { background-color: hsl(var(--card)); border-radius: 0.5rem; max-width: 28rem; width: 100%; padding: 1.5rem; text-align: center; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
+        .trophy-icon { width: 4rem; height: 4rem; color: #eab308; }
+        .sparkle-icon { width: 1.5rem; height: 1.5rem; color: #facc15; position: absolute; top: -0.5rem; right: -0.5rem; animation: pulse 1s ease-in-out infinite; }
+        .relative { position: relative; }
+        .inline-block { display: inline-block; }
+        .grayscale { filter: grayscale(1); }
+        .opacity-50 { opacity: 0.5; }
+        .opacity-100 { opacity: 1; }
+        .border-primary { border-color: hsl(var(--primary)); }
+        /* Аватарки бейджей */
+        .badge-icon { width: 3rem; height: 3rem; }
+        .badge-icon svg { width: 100%; height: 100%; }
+        .badge-earned { border-color: hsl(var(--primary)); }
+        .badge-locked { opacity: 0.5; filter: grayscale(1); }
+    </style>
+</head>
+<body>
+    <div class="p-4 md:p-6 max-w-7xl mx-auto">
+        <!-- Заголовок -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">Результаты сессии</h1>
+                <div class="flex items-center gap-3 mt-1">
+                    <span class="text-sm text-muted-foreground">Сессия завершена 14.07.2026, 14:28:15</span>
+                    <span class="font-bold text-lg text-green-600">B — Хорошо</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="xp-counter">3450</span>
+                    <span class="text-sm text-muted-foreground">XP</span>
+                    <span class="xp-bonus">+100</span>
+                </div>
+                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">← К сценариям</button>
+            </div>
+        </div>
+
+        <!-- Основная сетка: 3 колонки -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Левая колонка: Фидбек (2/3) -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Sandwich Feedback -->
+                <div class="space-y-4">
+                    <!-- Общая оценка -->
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold">Результаты сессии</h2>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-muted-foreground">Общая оценка:</span>
+                            <span class="inline-flex items-center rounded-md border px-4 py-1 text-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-green-500 text-white">78%</span>
+                        </div>
+                    </div>
+
+                    <!-- 🟢 Похвала -->
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
+                        <div class="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
+                            <div class="flex items-center gap-2">
+                                <div class="p-1.5 rounded-full bg-green-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                                </div>
+                                <span class="font-medium">✅ Что было хорошо</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><polyline points="18 15 12 9 6 15"/></svg>
+                        </div>
+                        <div class="pt-0 pb-4 px-4">
+                            <div class="prose prose-sm max-w-none text-foreground/90 leading-relaxed">
+                                <p>Отлично, ты быстро идентифицировал проблему клиента и не перебивал. Тон голоса был уверенным и профессиональным.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 🟡 Зона роста -->
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
+                        <div class="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
+                            <div class="flex items-center gap-2">
+                                <div class="p-1.5 rounded-full bg-yellow-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V4a1 1 0 0 1 1-1z"/><path d="M5 7h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/><path d="M9 12h6"/></svg>
+                                </div>
+                                <span class="font-medium">🟡 Что можно улучшить</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><polyline points="18 15 12 9 6 15"/></svg>
+                        </div>
+                        <div class="pt-0 pb-4 px-4">
+                            <div class="prose prose-sm max-w-none text-foreground/90 leading-relaxed">
+                                <p>В момент 01:45 клиент выразил сомнение, ты проигнорировал эмоцию. Ты перешел сразу к решению.</p>
+                                <div class="mt-3 p-3 bg-muted/50 rounded-md border-l-4 border-primary">
+                                    <p class="text-sm font-medium text-muted-foreground mb-1">📖 По скрипту:</p>
+                                    <blockquote class="text-sm italic pl-2 border-l-2 border-primary/30">
+                                        "При выражении сомнения необходимо применить технику эмпатии и предложить альтернативу"
+                                    </blockquote>
+                                    <blockquote class="text-sm italic pl-2 border-l-2 border-primary/30 mt-1">
+                                        "В следующий раз попробуй: 'Я понимаю ваше сомнение, давайте рассмотрим другой вариант...'"
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 🔵 Мотивация -->
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
+                        <div class="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer">
+                            <div class="flex items-center gap-2">
+                                <div class="p-1.5 rounded-full bg-blue-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                </div>
+                                <span class="font-medium">🔵 Мотивация</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><polyline points="18 15 12 9 6 15"/></svg>
+                        </div>
+                        <div class="pt-0 pb-4 px-4">
+                            <div class="prose prose-sm max-w-none text-foreground/90 leading-relaxed">
+                                <p>В остальном диалог был структурированным. Отработай эмпатию в квизе!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Статистика геймификации -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="flex flex-col space-y-1.5 p-6">
+                        <h3 class="text-sm font-medium">Ваш прогресс</h3>
+                    </div>
+                    <div class="p-6 pt-0 grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div>
+                            <p class="text-sm text-muted-foreground">Уровень</p>
+                            <p class="text-xl font-bold">4</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-muted-foreground">XP всего</p>
+                            <p class="text-xl font-bold">3450</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-muted-foreground">Стрик</p>
+                            <p class="text-xl font-bold">3</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-muted-foreground">Бейджи</p>
+                            <p class="text-xl font-bold">4</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая колонка: Графики (1/3) -->
+            <div class="space-y-6">
+                <!-- Radar Chart (имитация) -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="flex flex-col space-y-1.5 p-6">
+                        <h3 class="text-sm font-medium">Радар навыков</h3>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <!-- SVG-радар (упрощённая версия) -->
+                        <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+                            <!-- Сетка -->
+                            <polygon points="150,220 30,120 70,30 230,30 270,120" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+                            <polygon points="150,195 58,125 88,55 212,55 242,125" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+                            <polygon points="150,170 85,130 105,80 195,80 215,130" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+                            <polygon points="150,145 112,135 122,105 178,105 188,135" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+                            <line x1="150" y1="20" x2="150" y2="220" stroke="#e5e7eb" stroke-width="1"/>
+                            <line x1="30" y1="120" x2="270" y2="120" stroke="#e5e7eb" stroke-width="1"/>
+                            <line x1="70" y1="30" x2="230" y2="210" stroke="#e5e7eb" stroke-width="1"/>
+                            <line x1="230" y1="30" x2="70" y2="210" stroke="#e5e7eb" stroke-width="1"/>
+
+                            <!-- Названия осей -->
+                            <text x="150" y="240" text-anchor="middle" font-size="10" fill="#6b7280">Скрипт</text>
+                            <text x="18" y="125" text-anchor="middle" font-size="10" fill="#6b7280">Тон</text>
+                            <text x="55" y="25" text-anchor="middle" font-size="10" fill="#6b7280">Эмпатия</text>
+                            <text x="245" y="25" text-anchor="middle" font-size="10" fill="#6b7280">Возражения</text>
+                            <text x="280" y="125" text-anchor="middle" font-size="10" fill="#6b7280">Полнота</text>
+
+                            <!-- Данные (залитая область) -->
+                            <!-- Скрипт: 85% (от центра до 85% радиуса) -->
+                            <!-- Тон: 90% -->
+                            <!-- Эмпатия: 65% -->
+                            <!-- Возражения: 50% -->
+                            <!-- Полнота: 80% -->
+                            <polygon points="
+                                150,160
+                                85,135
+                                120,65
+                                200,65
+                                240,135
+                            " fill="rgba(99,102,241,0.3)" stroke="#6366f1" stroke-width="2"/>
+
+                            <!-- Точки на осях -->
+                            <circle cx="150" cy="160" r="4" fill="#6366f1"/>
+                            <circle cx="85" cy="135" r="4" fill="#6366f1"/>
+                            <circle cx="120" cy="65" r="4" fill="#6366f1"/>
+                            <circle cx="200" cy="65" r="4" fill="#6366f1"/>
+                            <circle cx="240" cy="135" r="4" fill="#6366f1"/>
+
+                            <!-- Значения рядом с точками -->
+                            <text x="150" y="155" text-anchor="middle" font-size="8" fill="#4f46e5">85%</text>
+                            <text x="70" y="130" text-anchor="middle" font-size="8" fill="#4f46e5">90%</text>
+                            <text x="120" y="55" text-anchor="middle" font-size="8" fill="#4f46e5">65%</text>
+                            <text x="200" y="55" text-anchor="middle" font-size="8" fill="#4f46e5">50%</text>
+                            <text x="255" y="130" text-anchor="middle" font-size="8" fill="#4f46e5">80%</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Score Breakdown -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="flex flex-col space-y-1.5 p-6">
+                        <h3 class="text-sm font-medium">Разбор по измерениям</h3>
+                    </div>
+                    <div class="p-6 pt-0 space-y-3">
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-muted-foreground">Скрипт</span>
+                                <span class="font-medium">85%</span>
+                            </div>
+                            <div class="progress-bar"><div class="fill bg-indigo-500" style="width: 85%;"></div></div>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-muted-foreground">Тон</span>
+                                <span class="font-medium">90%</span>
+                            </div>
+                            <div class="progress-bar"><div class="fill bg-green-500" style="width: 90%;"></div></div>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-muted-foreground">Эмпатия</span>
+                                <span class="font-medium">65%</span>
+                            </div>
+                            <div class="progress-bar"><div class="fill bg-blue-500" style="width: 65%;"></div></div>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-muted-foreground">Возражения</span>
+                                <span class="font-medium">50%</span>
+                            </div>
+                            <div class="progress-bar"><div class="fill bg-amber-500" style="width: 50%;"></div></div>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-muted-foreground">Полнота</span>
+                                <span class="font-medium">80%</span>
+                            </div>
+                            <div class="progress-bar"><div class="fill bg-pink-500" style="width: 80%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="flex flex-col space-y-1.5 p-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-medium">Ваши бейджи</h3>
+                            <span class="text-xs text-muted-foreground font-normal">+ ещё 2</span>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <div class="grid grid-cols-2 gap-2">
+                            <!-- Бейдж 1: получен -->
+                            <div class="p-4 text-center transition-all border-primary rounded-lg border p-4 text-center">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-primary"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                    <span class="font-medium text-sm">Слушаю!</span>
+                                    <span class="text-xs text-muted-foreground">Активное слушание</span>
+                                    <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-green-500 text-green-600">Получен</span>
+                                </div>
+                            </div>
+
+                            <!-- Бейдж 2: получен -->
+                            <div class="p-4 text-center transition-all border-primary rounded-lg border p-4 text-center">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-primary"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                    <span class="font-medium text-sm">Мастер эмпатии</span>
+                                    <span class="text-xs text-muted-foreground">Эмпатия &gt; 90%</span>
+                                    <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-green-500 text-green-600">Получен</span>
+                                </div>
+                            </div>
+
+                            <!-- Бейдж 3: заблокирован (серый) -->
+                            <div class="p-4 text-center transition-all opacity-50 grayscale rounded-lg border p-4 text-center">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-muted-foreground"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                    <span class="font-medium text-sm">Биллинг-гуру</span>
+                                    <span class="text-xs text-muted-foreground">3 биллинг-сценария</span>
+                                    <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-muted text-muted-foreground">Заблокирован</span>
+                                </div>
+                            </div>
+
+                            <!-- Бейдж 4: заблокирован (серый) -->
+                            <div class="p-4 text-center transition-all opacity-50 grayscale rounded-lg border p-4 text-center">
+                                <div class="flex flex-col items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-muted-foreground"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                    <span class="font-medium text-sm">Укротитель гнева</span>
+                                    <span class="text-xs text-muted-foreground">5 агрессивных клиентов</span>
+                                    <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-muted text-muted-foreground">Заблокирован</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Up Modal (скрыт по умолчанию, показывается при повышении уровня) -->
+        <!-- Для демонстрации показываем как часть страницы -->
+        <div class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="flex flex-col items-center">
+                    <div class="relative inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="trophy-icon"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sparkle-icon"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
+                    </div>
+                    <h2 class="text-2xl font-bold mt-2">🎉 Повышение уровня!</h2>
+                    <p class="text-sm text-muted-foreground mt-1">
+                        Вы достигли <strong>уровня 5</strong>!
+                        <br />
+                        <span class="text-sm text-muted-foreground">4 → 5</span>
+                    </p>
+                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 mt-4">Отлично!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

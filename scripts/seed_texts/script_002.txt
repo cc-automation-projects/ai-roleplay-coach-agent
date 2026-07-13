@@ -1,0 +1,1 @@
+﻿Billing specialist script for disputed charges. Customer claims they were overcharged for a service they did not order. Agent reviews billing history, identifies the charge, verifies service activation. If error, apologize and issue credit. If valid charge, explain itemized breakdown. Offer payment plan if needed.

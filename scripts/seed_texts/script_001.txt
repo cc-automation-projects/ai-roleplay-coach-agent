@@ -1,0 +1,1 @@
+﻿Level 1 tech support script for internet outage. Customer reports complete loss of connectivity. Agent must verify account, run modem diagnostics, check area outages, provide ETA or escalate. Key phrases to use: acknowledge frustration, verify account, check outage map, offer credit if needed.

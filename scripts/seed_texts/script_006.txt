@@ -1,0 +1,1 @@
+﻿Standard refund processing script. Customer requests refund for a recent purchase. Agent verifies the order is within the refund window, processes the refund according to policy, sets clear expectations for timeline of 5 to 7 business days, and offers alternative solutions such as exchange or store credit.

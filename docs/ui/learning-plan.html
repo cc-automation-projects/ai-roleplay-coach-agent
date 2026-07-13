@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Учебный план | AI Coach Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96.1%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96.1%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96.1%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+            --radius: 0.5rem;
+        }
+        * {
+            border-color: hsl(var(--border));
+        }
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-feature-settings: "rlig" 1, "calt" 1;
+        }
+        .bg-background { background-color: hsl(var(--background)); }
+        .bg-card { background-color: hsl(var(--card)); }
+        .bg-primary { background-color: hsl(var(--primary)); }
+        .bg-muted { background-color: hsl(var(--muted)); }
+        .bg-secondary { background-color: hsl(var(--secondary)); }
+        .bg-green-50 { background-color: #f0fdf4; }
+        .bg-green-100 { background-color: #dcfce7; }
+        .text-green-700 { color: #15803d; }
+        .text-foreground { color: hsl(var(--foreground)); }
+        .text-muted-foreground { color: hsl(var(--muted-foreground)); }
+        .text-primary-foreground { color: hsl(var(--primary-foreground)); }
+        .text-card-foreground { color: hsl(var(--card-foreground)); }
+        .text-primary { color: hsl(var(--primary)); }
+        .border-border { border-color: hsl(var(--border)); }
+        .border-input { border-color: hsl(var(--input)); }
+        .border-green-200 { border-color: #bbf7d0; }
+        .ring-offset-background { --tw-ring-offset-color: hsl(var(--background)); }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+        .hover\:bg-primary\/90:hover { background-color: hsl(var(--primary) / 0.9); }
+        .hover\:underline:hover { text-decoration: underline; }
+        .hover\:bg-accent:hover { background-color: hsl(var(--accent)); }
+        .hover\:text-accent-foreground:hover { color: hsl(var(--accent-foreground)); }
+        .focus-visible\:outline-none:focus-visible { outline: 2px solid transparent; outline-offset: 2px; }
+        .focus-visible\:ring-2:focus-visible { --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
+        .focus-visible\:ring-ring:focus-visible { --tw-ring-color: hsl(var(--ring)); }
+        .focus-visible\:ring-offset-2:focus-visible { --tw-ring-offset-width: 2px; }
+        .disabled\:pointer-events-none:disabled { pointer-events: none; }
+        .disabled\:opacity-50:disabled { opacity: 0.5; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .bg-primary\/10 { background-color: hsl(var(--primary) / 0.1); }
+        .bg-muted\/50 { background-color: hsl(var(--muted) / 0.5); }
+        .border-l-4 { border-left-width: 4px; }
+        .avatar { display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; width: 2rem; height: 2rem; font-weight: 600; font-size: 0.75rem; color: white; flex-shrink: 0; }
+        .avatar-sm { width: 2rem; height: 2rem; font-size: 0.75rem; }
+        .border-l-4 { border-left-width: 4px; }
+        .w-6 { width: 1.5rem; }
+        .flex-shrink-0 { flex-shrink: 0; }
+        .min-w-0 { min-width: 0; }
+        .avatar { display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; width: 2rem; height: 2rem; font-weight: 600; font-size: 0.75rem; color: white; flex-shrink: 0; }
+        .avatar-sm { width: 2rem; height: 2rem; font-size: 0.75rem; }
+        .text-xs { font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen bg-background">
+        <!-- Шапка (Header) из RootLayout -->
+        <header class="border-b bg-card sticky top-0 z-10">
+            <div class="container mx-auto flex items-center justify-between h-16 px-4">
+                <div class="flex items-center gap-6">
+                    <a href="/" class="font-bold text-xl text-primary">AI Coach Hub</a>
+                    <nav class="hidden md:flex gap-4">
+                        <a href="/operator" class="text-sm hover:text-primary">Тренажёр</a>
+                        <a href="/trainer" class="text-sm hover:text-primary font-medium text-primary">Аналитика</a>
+                        <a href="/admin" class="text-sm hover:text-primary">Администрирование</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="avatar avatar-sm bg-primary/10 text-primary">ТР</span>
+                        <span class="text-sm hidden sm:inline">Тренер</span>
+                    </div>
+                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-3">Выйти</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Основное содержимое -->
+        <div class="container mx-auto p-6 max-w-4xl">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-2xl font-bold">Учебный план</h1>
+                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">← К дашборду</button>
+            </div>
+
+            <!-- Форма генерации плана -->
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm mb-6">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <h2 class="text-sm font-medium">Сгенерировать план</h2>
+                </div>
+                <div class="p-6 pt-0">
+                    <div class="flex gap-2">
+                        <div class="flex-1">
+                            <label for="scenarioId" class="sr-only">ID сценария</label>
+                            <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="scenarioId" placeholder="Введите ID сценария..." value="billing-001" />
+                        </div>
+                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Сгенерировать</button>
+                    </div>
+                    <p class="text-xs text-muted-foreground mt-2">План будет построен на основе слабых мест оператора в данном сценарии.</p>
+                </div>
+            </div>
+
+            <!-- Содержимое плана -->
+            <div>
+                <div class="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                    <span>План для пользователя: operator_001</span>
+                    <span>•</span>
+                    <span>Сложность: intermediate</span>
+                    <span>•</span>
+                    <span>Создан: 14.07.2026</span>
+                </div>
+
+                <!-- Фокус-области -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm mb-4">
+                    <div class="flex flex-col space-y-1.5 p-4">
+                        <h3 class="text-sm font-medium flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="8"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            Области для развития
+                        </h3>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">Эмпатия</span>
+                            <span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">Возражения</span>
+                            <span class="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">Скрипт</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Шаги плана -->
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    <div class="flex flex-col space-y-1.5 p-4">
+                        <h3 class="text-sm font-medium">План действий</h3>
+                    </div>
+                    <div class="p-4 pt-0 space-y-3">
+                        <!-- Шаг 1 -->
+                        <div class="flex items-start gap-4 p-3 rounded-lg border border-border">
+                            <div class="flex-shrink-0 mt-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="font-medium text-sm">Шаг 1</span>
+                                    <span class="text-sm">Review: Эмпатия</span>
+                                </div>
+                                <p class="text-sm text-muted-foreground mt-0.5">Изучите скрипт 'billing-001' с вниманием к эмпатии. Идентифицируйте лучшие примеры в материале.</p>
+                                <div class="flex items-center gap-1 mt-1.5 text-xs text-muted-foreground">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    <span>15 мин</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Шаг 2 -->
+                        <div class="flex items-start gap-4 p-3 rounded-lg border border-border">
+                            <div class="flex-shrink-0 mt-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="font-medium text-sm">Шаг 2</span>
+                                    <span class="text-sm">Practice: Эмпатия</span>
+                                </div>
+                                <p class="text-sm text-muted-foreground mt-0.5">Проведите симуляцию, сосредоточившись на улучшении эмпатии. Цель — набрать более 80%.</p>
+                                <div class="flex items-center gap-1 mt-1.5 text-xs text-muted-foreground">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    <span>20 мин</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Шаг 3 -->
+                        <div class="flex items-start gap-4 p-3 rounded-lg border border-border">
+                            <div class="flex-shrink-0 mt-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="font-medium text-sm">Шаг 3</span>
+                                    <span class="text-sm">Review: Возражения</span>
+                                </div>
+                                <p class="text-sm text-muted-foreground mt-0.5">Изучите технику обработки возражений из скрипта 'billing-001'.</p>
+                                <div class="flex items-center gap-1 mt-1.5 text-xs text-muted-foreground">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    <span>15 мин</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Шаг 4 -->
+                        <div class="flex items-start gap-4 p-3 rounded-lg border border-border">
+                            <div class="flex-shrink-0 mt-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="font-medium text-sm">Шаг 4</span>
+                                    <span class="text-sm">Practice: Возражения</span>
+                                </div>
+                                <p class="text-sm text-muted-foreground mt-0.5">Отработайте возражения в симуляции. Добейтесь результата выше 75%.</p>
+                                <div class="flex items-center gap-1 mt-1.5 text-xs text-muted-foreground">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    <span>20 мин</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Шаг 5: финальный -->
+                        <div class="flex items-start gap-4 p-3 rounded-lg border border-green-200 bg-green-50">
+                            <div class="flex-shrink-0 mt-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="font-medium text-sm">Шаг 5</span>
+                                    <span class="text-sm">Knowledge Check</span>
+                                </div>
+                                <p class="text-sm text-muted-foreground mt-0.5">Пройдите квиз по сценарию 'billing-001' для закрепления ключевых концепций.</p>
+                                <div class="flex items-center gap-1 mt-1.5 text-xs text-muted-foreground">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    <span>10 мин</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

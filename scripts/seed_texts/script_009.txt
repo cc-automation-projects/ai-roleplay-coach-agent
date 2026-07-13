@@ -1,0 +1,1 @@
+﻿Outbound call script for post-resolution follow-up. Agent calls the customer after a previous support ticket was resolved. Agent checks if the issue is fully resolved, offers additional help if needed, asks for feedback on the support experience, and mentions new relevant features or promotions the customer might find useful.
